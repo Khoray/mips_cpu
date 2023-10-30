@@ -1,0 +1,15 @@
+\section{参考设计说明}
+
+\begin{enumerate}
+    \item 本项目建立在吕昱峰学长的lab4基础上\cite{lab4}。
+    \item opdefines.vh和defines2.vh中的宏定义借鉴实验资料包中的ref\_code中的defines.vh。
+    \item 36周期div除法器来源于实验资料包中的ref\_code\cite{实验资料包}。
+    \item mmu来源于实验资料包中的ref\_code。
+    \item 直接映射icache和写透dcache来源于实验资料包中的ref\_code/cache。
+    \item cp0\_reg来源于实验资料包中的ref\_code。
+    \item sram转类sram（X\_sram\_to\_sram\_like.v）来源于系统结构实验二的示例代码。
+    \item mycpu\_top.v和mips.v的接口参考了系统结构实验二的示例代码中的mycpu\_top.v的接口。
+    \item cpu\_axi\_interface.v直接使用了龙芯提供的转接代码。
+    \item 将走cache和不走cache的信号分开的模块bridge1x2和bridge2x1的接口参考了系统结构实验二的示例代码中的bridge1x2.v和bridge2x1.v的接口。
+    \item AXI 1x2 bridge，clk\_pll，axi\_clock\_converter为vivado ip核。
+\end{enumerate}

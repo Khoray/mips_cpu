@@ -1,0 +1,59 @@
+\section{现场添加指令和答辩记录}
+
+\subsection{现场添加指令}
+\subsubsection{分工情况}
+两人一起添加指令。
+\subsubsection{完成情况}
+修改aludec（添加RELU的alucontrol），maindec（添加RELU的译码），opcodedefines.vh文件中添加RELU的opcode和aludefines.vh文件中添加RELU的alucontrol，在alu中添加RELU操作。添加指令逻辑思路清晰正确，编译通过。
+\subsection{现场答辩记录}
+\subsubsection{问题1}
+\begin{itemize}
+    \item 问题：cp0的BadVaddr寄存器是放什么的？
+    \item \stunameb 回答：地址错例外的那一条指令的虚地址，地址错例外是pc或lw或sw的时候地址没有对齐导致的。
+\end{itemize}
+\subsubsection{问题2}
+\begin{itemize}
+    \item 问题：cp0的epc寄存器是放什么的？
+    \item \stunameb 回答：异常处理执行完后的返回地址，如果异常在延迟槽就要返回上一条，否则就是该条。
+    \item \stunamea 补充：异常分为异步异常和同步异常，前者的返回地址是例外地址的下一条，后者的返回地址是例外的地址。
+\end{itemize}
+\subsubsection{问题3}
+\begin{itemize}
+    \item 问题：AXI是不是用的转接桥？
+    \item \stunameb 回答：是的，从mips中的sram\_to\_sram\_like将sram接口转为sram\_like接口，然后经过mmu模块确定是否要过dcache。对于指令来说必须要经过icache，经过了icache miss，进入axi转接桥。对于数据来说，首先根据是否经过dcache分为两条路，一条经过cache，另一条直接传出去。如果cachemiss或者直接传出去，就通过axi转接桥送给外面的组件。
+\end{itemize}
+\subsubsection{问题4}
+\begin{itemize}
+    \item 问题：跳转放在了哪个阶段？
+    \item \stunameb 回答：Decode阶段。
+\end{itemize}
+\subsubsection{问题5}
+\begin{itemize}
+    \item 问题：整个设计的冒险有哪些？
+    \item \stunameb 回答：分为数据冒险和控制冒险，对于数据冒险来说，要用到之前没有写回的数据，有的需要stall有的需要前推，stall分为两类：一类是上一条指令还在E阶段，M阶段才能拿到，D阶段娶不到M阶段的值，必须stall一个周期；另一类是我们没有实现E阶段向D阶段的前推，参考lab4的设计，stall了一个周期。前推部分也有两类，一类是W向E前推的，还有一类是M向E和D的前推的。
+\end{itemize}
+\subsubsection{问题6}
+\begin{itemize}
+    \item 问题：sram\_like的握手信号是什么逻辑？
+    \item \stunameb 回答：时序逻辑。
+\end{itemize}
+\subsubsection{问题7}
+\begin{itemize}
+    \item 问题：请你描述一下d\_cache的状态机。
+    \item \stunameb 回答：d\_cache状态机分为三个状态，空闲、读ram的RM状态和写ram的WM状态，他们各自转移的逻辑是，当空闲状态遇到读miss时，会进入到RM状态，遇到写时无论是hit还是miss，都要进入WM状态，其他情况保持不变，RM在握手之后转到空闲状态，WM也是，握手是指数据握手。
+\end{itemize}
+\subsubsection{问题8}
+\begin{itemize}
+    \item 问题：请问遇到异常flush的时候，div已经进入到除法状态了，这个时候怎么处理呢？
+    \item \stunamea 回答：我们的设计中，flush的时候div\_stall不会置位，div运算的结果按理来说会被flush，以后都用不到了。
+\end{itemize}
+\begin{center}
+\end{center}
+
+
+\subsubsection{问题9}
+\begin{itemize}
+    \item 问题：请你们各自说说过程中遇到令你影响深刻的问题。
+    \item \stunamea 回答：我们发现在除法最后一个周期的时候，会根据op\_data的值改变得到的结果，而op\_data在整个过程中发生了变化，而op\_data是alu的srca2E传进来的，因此是srca2E出了问题，刚开始的srca2E是M阶段前推过来的，但是那个时候我们的div只stall了前三个阶段，因此，在M阶段的指令流走了之后，前推也没了。虽然M阶段的那条指令已经写入了regfile，但是由于stall的存在，不能把正确的值读到E阶段。
+    \item \stunameb 回答：axi的sram转类sram的接口中，我们的接口用的是系统结构提供的那个接口，但是我们发现那个接口加上dcache就炸了perfdiff，对着波形图找了很久，最后发现d\_sram\_to\_sram\_like那个地方wen是0000，但是出来的size是10，地址低两位不是00而是10，但1010不是一个合法组合，所以就把低两位直接改成0，就可以过perfdiff了。
+\end{itemize}

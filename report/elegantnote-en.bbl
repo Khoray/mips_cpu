@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{lab4}
+吕昱峰.
+\newblock 一步一步写mips cpu.
+\newblock \url{https://github.com/lvyufeng/step_into_mips}, 2017.
+
+\bibitem{cqu硬件综合文档}
+重庆大学计算机学院.
+\newblock 重庆大学硬件综合设计实验文档.
+\newblock \url{https://co.ccslab.cn/}, 2022.
+
+\bibitem{实验资料包}
+重庆大学计算机学院.
+\newblock 重庆大学计算机组成原理、硬件综合设计实验材料.
+\newblock \url{https://github.com/CQU-CS-LABs/CO-lab-material-CQU}, 2022.
+
+\end{thebibliography}
